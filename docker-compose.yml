@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+
+  # PHP-FPM Service
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    
+    container_name: laravel-php
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www
+
+    volumes:
+      - ./:/var/www
+
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+      - mailhog
+
+    networks:
+      - app-network
+
+  # NGINX Service
+  webserver:
+    image: nginx:alpine
+    container_name: laravel-nginx
+    restart: unless-stopped
+    tty: true
+    
+    ports:
+      - "8085:80"
+      - "8095:443"
+
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+
+    depends_on:
+      - app
+
+    networks:
+      - app-network
+
+  # Redis service
+  redis:
+    container_name: laravel-redis
+    image: redis:3
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+
+    networks:
+      - app-network
+
+  # Postgres service
+  postgres:
+    image: postgres:14.1-alpine
+    container_name: laravel-postgres
+    restart: unless-stopped
+    
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    
+    ports:
+      - '${DB_PORT}:5432'
+    
+    volumes: 
+      - dbdata:/var/lib/postgresql/data
+
+    networks:
+      - app-network
+
+  # Mail Server
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: laravel-mailhog
+    restart: unless-stopped
+
+    ports:
+      - ${MAIL_PORT}:1025
+      - 8025:8025
+
+    networks:
+      - app-network
+
+  # RabbitMQ Service
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: laravel-rabbitmq
+    restart: unless-stopped
+
+    ports:
+        - 5672:5672
+        - 15672:15672
+    
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+    networks:
+      - app-network
+
+volumes:
+  dbdata:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
