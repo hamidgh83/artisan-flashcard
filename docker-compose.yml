@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     
-    container_name: laravel-php
+    container_name: ${APP_NAME}-php
     restart: unless-stopped
     tty: true
     working_dir: /var/www
@@ -17,10 +17,7 @@ services:
       - ./:/var/www
 
     depends_on:
-      - postgres
-      - redis
-      - rabbitmq
-      - mailhog
+      - mysql
 
     networks:
       - app-network
@@ -28,13 +25,13 @@ services:
   # NGINX Service
   webserver:
     image: nginx:alpine
-    container_name: laravel-nginx
+    container_name: ${APP_NAME}-nginx
     restart: unless-stopped
     tty: true
     
     ports:
-      - "8085:80"
-      - "8095:443"
+      - "8000:80"
+      - "8001:443"
 
     volumes:
       - ./:/var/www
@@ -45,10 +42,10 @@ services:
 
     networks:
       - app-network
-
+  
   # Redis service
   redis:
-    container_name: laravel-redis
+    container_name: ${APP_NAME}-redis
     image: redis:3
     restart: unless-stopped
     ports:
@@ -57,53 +54,26 @@ services:
     networks:
       - app-network
 
-  # Postgres service
-  postgres:
-    image: postgres:14.1-alpine
-    container_name: laravel-postgres
+  # MySQL Service
+  mysql:
+    image: mysql:latest
+    container_name: ${APP_NAME}-mysql
     restart: unless-stopped
     
     environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - PGDATA=/var/lib/postgresql/data/pgdata
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=root
     
     ports:
-      - '${DB_PORT}:5432'
+      - '${DB_PORT}:3306'
+
+    expose:
+      - '3306'
     
     volumes: 
-      - dbdata:/var/lib/postgresql/data
-
-    networks:
-      - app-network
-
-  # Mail Server
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: laravel-mailhog
-    restart: unless-stopped
-
-    ports:
-      - ${MAIL_PORT}:1025
-      - 8025:8025
-
-    networks:
-      - app-network
-
-  # RabbitMQ Service
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: laravel-rabbitmq
-    restart: unless-stopped
-
-    ports:
-        - 5672:5672
-        - 15672:15672
-    
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - dbdata:/var/lib/mysql
 
     networks:
       - app-network
