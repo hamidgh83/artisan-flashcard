@@ -11,7 +11,10 @@ class ListCommand extends AbstractCommand
      *
      * @var string
      */
-    protected $signature = 'flashcard:list {--m|menu=false}';
+    protected $signature = 'flashcard:list 
+                            {--i|interactive=false}
+                            {--u|user=null}
+                            ';
 
     /**
      * The console command description.
