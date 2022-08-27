@@ -9,7 +9,7 @@ class MenuCommand extends AbstractCommand
      *
      * @var string
      */
-    protected $signature = 'flashcard:interactive';
+    protected $signature = 'flashcard:interactive {--u|user=null}';
 
     /**
      * The console command description.
@@ -25,6 +25,25 @@ class MenuCommand extends AbstractCommand
      */
     public function handle()
     {
+        $defaultOptions = [
+            '-i' => true,
+            '-u' => $this->getOption('user'),
+        ];
+
+        if (!match ($this->readChoice()) {
+            1 => $this->call('flashcard:create', $defaultOptions),
+            2 => $this->call('flashcard:list', $defaultOptions),
+            3 => $this->call('flashcard:practice', $defaultOptions),
+            4 => $this->info("Goodbye ^_^\n"),
+        }) {
+            return $this->exit();
+        }
+
+        $this->handle();
+    }
+
+    private function readChoice()
+    {
         $options = [
             1 => 'Create a flashcard',
             2 => 'List all flashcards',
@@ -32,20 +51,9 @@ class MenuCommand extends AbstractCommand
             4 => 'Exit',
         ];
 
-        $choice = array_search(
+        return array_search(
             $this->choice('Please choose an option', $options),
             $options
         );
-
-        if (!match ($choice) {
-            1 => $this->call('flashcard:create', ['--menu' => true]),
-            2 => $this->call('flashcard:list', ['--menu' => true]),
-            3 => $this->call('flashcard:practice', ['--menu' => true]),
-            4 => $this->info("Goodbye ^_^\n"),
-        }) {
-            return $this->exit();
-        }
-
-        $this->handle();
     }
 }

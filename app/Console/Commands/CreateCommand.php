@@ -13,7 +13,10 @@ class CreateCommand extends AbstractCommand
      *
      * @var string
      */
-    protected $signature = 'flashcard:create {--m|menu=false}';
+    protected $signature = 'flashcard:create 
+                            {--i|interactive=false}
+                            {--u|user}
+                            ';
 
     /**
      * The console command description.
@@ -41,6 +44,8 @@ class CreateCommand extends AbstractCommand
      */
     public function handle()
     {
+        $user = $this->user();
+
         $this->alert('Create your flash cards');
         $this->info('To save your changes leave the question line empty and press ENTER.');
 
@@ -49,7 +54,11 @@ class CreateCommand extends AbstractCommand
         while (true) {
             if ($question = $this->ask(sprintf('Question %d', $index))) {
                 if ($answer = $this->ask('Answer')) {
-                    $model = new FlashCard(['question' => $question, 'answer' => $answer]);
+                    $model = new FlashCard([
+                        'user_id'  => $user->id,
+                        'question' => $question,
+                        'answer'   => $answer,
+                    ]);
                     $items = $this->flashCardService->add($model);
                     ++$index;
 
