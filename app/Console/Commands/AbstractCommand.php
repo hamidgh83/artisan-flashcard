@@ -80,8 +80,8 @@ abstract class AbstractCommand extends Command
             $user     = $this->userService->get($username);
 
             if (!$user instanceof User) {
-                if ($this->confirm('User was not found! Do you want to login as a new user?', true)) {
-                    $user = $this->userService->get();
+                if ($this->confirm('User was not found! Do you want to create a new user?', true)) {
+                    $user = $this->userService->create($username);
                 }
             }
         } while (!$user);

@@ -9,7 +9,7 @@ class MenuCommand extends AbstractCommand
      *
      * @var string
      */
-    protected $signature = 'flashcard:interactive {--u|user=null}';
+    protected $signature = 'flashcard:interactive {--u|user=}';
 
     /**
      * The console command description.
@@ -26,8 +26,8 @@ class MenuCommand extends AbstractCommand
     public function handle()
     {
         $defaultOptions = [
-            '-i' => true,
-            '-u' => $this->getOption('user'),
+            '-i'     => true,
+            '--user' => $this->getOption('user'),
         ];
 
         if (!match ($this->readChoice()) {

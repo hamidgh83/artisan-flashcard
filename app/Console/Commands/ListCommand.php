@@ -12,8 +12,8 @@ class ListCommand extends AbstractCommand
      * @var string
      */
     protected $signature = 'flashcard:list 
-                            {--i|interactive=false}
-                            {--u|user=null}
+                            {--u|user=}
+                            {--i|interactive}
                             ';
 
     /**
@@ -42,9 +42,11 @@ class ListCommand extends AbstractCommand
      */
     public function handle()
     {
+        $user = $this->user();
         $this->table(
             ['Question', 'Answer'],
-            $this->flashCardService->getAll()
+            $this->flashCardService->getAll($user, ['question', 'answer']),
+            'box-double'
         );
 
         return $this->homeScreen();

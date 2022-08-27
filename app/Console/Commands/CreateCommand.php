@@ -14,8 +14,8 @@ class CreateCommand extends AbstractCommand
      * @var string
      */
     protected $signature = 'flashcard:create 
-                            {--i|interactive=false}
-                            {--u|user}
+                            {--u|user=}
+                            {--i|interactive}
                             ';
 
     /**
