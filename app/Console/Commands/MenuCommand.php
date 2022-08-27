@@ -25,9 +25,10 @@ class MenuCommand extends AbstractCommand
      */
     public function handle()
     {
+        $user           = $this->user();
         $defaultOptions = [
             '-i'     => true,
-            '--user' => $this->getOption('user'),
+            '--user' => $user->username,
         ];
 
         if (!match ($this->readChoice()) {
