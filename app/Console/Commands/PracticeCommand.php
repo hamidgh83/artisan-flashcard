@@ -48,13 +48,22 @@ class PracticeCommand extends AbstractCommand
 
         $this->alert('Practice');
 
-        $completion   = $this->practiceService->completionPercentage($user);
-        $allPractices = $this->practiceService->getPractices($user);
-        $this->showProgress($allPractices, $completion);
+        $repeate = true;
+        while ($repeate) {
+            $completion   = $this->practiceService->completionPercentage($user);
+            $allPractices = $this->practiceService->getPractices($user);
+            $this->showProgress($allPractices, $completion);
 
-        if ($completion < 100) {
-            $this->info("\nPlease answer the questions\n");
-            $this->startPractice($allPractices, $user);
+            if ($completion < 100) {
+                $this->info("\nPlease answer the questions\n");
+                $this->startPractice($allPractices, $user);
+            } else {
+                $this->info("\nTo start a new practice please use RESET option!\n");
+
+                break;
+            }
+
+            $repeate = $this->confirm("\nDo you want to repeate the practice?\n");
         }
 
         return $this->homeScreen();
