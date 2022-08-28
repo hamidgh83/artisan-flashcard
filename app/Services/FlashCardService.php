@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Models\FlashCard;
+use App\Models\User;
 use App\Repositories\FlashCardRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 
 class FlashCardService
 {
@@ -44,10 +46,16 @@ class FlashCardService
     }
 
     /**
-     * Get all flash cards.
+     * Get all flash cards filtered by columns.
      */
-    public function getAll(): Collection
+    public function getAll(User $user, ?array $columns = null): SupportCollection
     {
-        return $this->repository->findAll(['question', 'answer']);
+        return $user->flashcards->map(function ($model) use ($columns) {
+            if (!empty($columns)) {
+                return $model->only($columns);
+            }
+
+            return $model;
+        });
     }
 }
