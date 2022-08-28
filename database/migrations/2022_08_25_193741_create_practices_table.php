@@ -11,10 +11,10 @@ return new class() extends Migration {
     public function up()
     {
         Schema::create('practices', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('flash_card_id');
-            $table->enum('result', ['NOT ANSWERED', 'CORRECT', 'INCORRECT'])->index();
-            $table->string('answer');
+            $table->boolean('result');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
