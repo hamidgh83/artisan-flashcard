@@ -35,7 +35,9 @@ class MenuCommand extends AbstractCommand
             1 => $this->call('flashcard:create', $defaultOptions),
             2 => $this->call('flashcard:list', $defaultOptions),
             3 => $this->call('flashcard:practice', $defaultOptions),
-            4 => $this->info("Goodbye ^_^\n"),
+            4 => $this->call('flashcard:stats', $defaultOptions),
+            5 => $this->call('flashcard:reset', $defaultOptions),
+            6 => $this->info("Goodbye ^_^\n"),
         }) {
             return $this->exit();
         }
@@ -49,7 +51,9 @@ class MenuCommand extends AbstractCommand
             1 => 'Create a flashcard',
             2 => 'List all flashcards',
             3 => 'Practice',
-            4 => 'Exit',
+            4 => 'Stats',
+            5 => 'Reset',
+            6 => 'Exit',
         ];
 
         return array_search(

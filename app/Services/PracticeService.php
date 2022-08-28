@@ -64,4 +64,12 @@ class PracticeService
     {
         $user->practices()->attach($card->id, ['result' => $card->answer == $answer]);
     }
+
+    /**
+     * Reset all practices by the given user.
+     */
+    public function reset(User $user): int
+    {
+        return $user->practices()->detach();
+    }
 }
