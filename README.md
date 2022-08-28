@@ -44,7 +44,7 @@ and you see these information:
 | FlashCard-redis | docker-entrypoint.sh redis ... | UP | 0.0.0.0:6380->6379/tcp,:::6380->6379/tcp |
 
 
-### Setup Laravel Configuration
+### Setting Up Laravel Configurations
 You should run these commands sequencially:
 
 ```bash
@@ -62,11 +62,23 @@ docker exec -it FlashCard-php php artisan migrate
 And that's it. Let's enjoy :)
 
 ## Artisan Commands
-Your commands must be executed in running containers. Therefore, you can execute artisan commands like this: 
+Your commands must be executed in running containers. Therefore, you can execute artisan commands using: 
 
 ```bash
-docker exec -it FlashCard-php php artisan flashcard:interactive
+docker exec -it FlashCard-php php artisan <artisan_command>
 ``` 
+
+The following commands are available:
+
+| Command | Options | Description |
+| ------- | ------- | ----------- |
+| flashcard:interactive | --user[=username] | Shows an interactive menu |
+| flashcard:create | --user[=username], -i | Create a set of questions and answers |
+| flashcard:list | --user[=username], -i | Show the list of created questions and answers |
+| flashcard:stats | --user[=username], -i | Shows an stat of practiced flashcards |
+| flashcard:reset | --user[=username], -i | Clears all the practices by the user |
+
+> Please note that you can jump into an interactive console command using `-i` option. The fist command `flashcard:interactive` only accepts `--user` option.  
 
 ## Running Tests
 To run the tests run:
