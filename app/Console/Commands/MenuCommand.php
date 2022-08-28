@@ -32,12 +32,13 @@ class MenuCommand extends AbstractCommand
         ];
 
         if (!match ($this->readChoice()) {
-            1 => $this->call('flashcard:create', $defaultOptions),
-            2 => $this->call('flashcard:list', $defaultOptions),
-            3 => $this->call('flashcard:practice', $defaultOptions),
-            4 => $this->call('flashcard:stats', $defaultOptions),
-            5 => $this->call('flashcard:reset', $defaultOptions),
-            6 => $this->info("Goodbye ^_^\n"),
+            1       => $this->call('flashcard:create', $defaultOptions),
+            2       => $this->call('flashcard:list', $defaultOptions),
+            3       => $this->call('flashcard:practice', $defaultOptions),
+            4       => $this->call('flashcard:stats', $defaultOptions),
+            5       => $this->call('flashcard:reset', $defaultOptions),
+            6       => $this->info("Goodbye ^_^\n"),
+            default => false
         }) {
             return $this->exit();
         }

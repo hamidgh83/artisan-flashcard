@@ -11,6 +11,8 @@ class FlashCard extends Model
 {
     use HasFactory;
 
+    public const UPDATED_AT = null;
+
     protected $fillable = ['user_id', 'question', 'answer'];
 
     protected $casts = [
