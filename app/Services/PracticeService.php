@@ -48,13 +48,10 @@ class PracticeService
      */
     public function completionPercentage(User $user): int
     {
-        if (!$totalQuestions = $user->flashcards->count()) {
-            return 0;
-        }
-
+        $totalQuestions = $user->flashcards->count();
         $correctAnswers = $this->repository->countByCorrectAnswers($user);
 
-        return ($correctAnswers / $totalQuestions) * 100;
+        return $this->percentage($correctAnswers, $totalQuestions);
     }
 
     /**
@@ -71,5 +68,26 @@ class PracticeService
     public function reset(User $user): int
     {
         return $user->practices()->detach();
+    }
+
+    /**
+     * Return stats.
+     */
+    public function getStats(User $user)
+    {
+        $totalQuestions = $user->flashcards->count();
+        $totalAnswers   = $this->repository->countByAnswered($user);
+        $correctAnswers = $this->repository->countByCorrectAnswers($user);
+
+        return [
+            'totalQuestions' => $totalQuestions,
+            'totalAnswers'   => $this->percentage($totalAnswers, $totalQuestions) . '%',
+            'correctAnswers' => $this->percentage($correctAnswers, $totalQuestions) . '%',
+        ];
+    }
+
+    private function percentage(int $val, int $base)
+    {
+        return $base > 0 ? ($val / $base) * 100 : 0;
     }
 }

@@ -55,15 +55,17 @@ class PracticeCommand extends AbstractCommand
             $this->showProgress($allPractices, $completion);
 
             if ($completion < 100) {
-                $this->info("\nPlease answer the questions\n");
+                $this->newLine(2);
+                $this->info("Please answer the questions");
                 $this->startPractice($allPractices, $user);
             } else {
-                $this->info("\nTo start a new practice please use RESET option!\n");
+                $this->info("To start a new practice please use RESET option!");
 
                 break;
             }
 
-            $repeate = $this->confirm("\nDo you want to repeate the practice?\n");
+            $this->newLine(2);
+            $repeate = $this->confirm("Do you want to repeate the practice?");
         }
 
         return $this->homeScreen();

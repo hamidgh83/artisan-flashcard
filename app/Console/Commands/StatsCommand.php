@@ -42,6 +42,16 @@ class StatsCommand extends AbstractCommand
      */
     public function handle()
     {
+        $user = $this->user();
+
+        $this->alert('Stats');
+
+        $this->table(
+            ['Total questions', 'Total answered', 'Correct answered'],
+            [$this->practiceService->getStats($user)],
+            'box-double'
+        );
+
         return $this->homeScreen();
     }
 }

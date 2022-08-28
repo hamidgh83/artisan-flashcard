@@ -44,7 +44,7 @@ class ResetCommand extends AbstractCommand
     {
         $user = $this->user();
 
-        if ($this->confirm('Are you sure you want to clear all practices?')) {
+        if ($this->confirm('Are you sure you want to clear all practices?', true)) {
             $this->practiceService->reset($user);
             $this->warn("\nPractices cleared successfuly!\n");
         }
