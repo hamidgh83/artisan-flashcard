@@ -1,64 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## About The App
+This is a console app to practice Flashcards. Users can create their own flashcard and start practicing. It provides an interactive menu to create flashcards, view the list and practice them.
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## Requirements
+This project uses:
+- PHP8.0+
+- Mysql
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application has been set up with docker and you need to install:
+- docker
+- docker-compose
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+on your machine to run the project.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## How to Run
+### Running Docker Containers
+In order to run the application you have to build the docker images and run the containers. Before building the docker images, make sure that you have copied the environment file and updated the parameters.
 
-## Learning Laravel
+```bash
+cp .env.example .env
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Then run docker using the bellow command:
+```bash
+docker compose up --build -d
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> **Note:** You may have port(s) conflict on your machine while trying to run the containers. You can change the default ports from `.env` file and try again.
 
-## Laravel Sponsors
+Once the containers are up and running you should be able to see the list of running container:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```bash
+docker compose ps
+```
 
-### Premium Partners
+and you see these information:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+| Name | Command | State | Ports | 
+| ---- | ------- | ----- | ----- |
+| FlashCard-mysql | docker-entrypoint.sh | UP | 0.0.0.0:3308->3306/tcp,:::3308->3306/tcp, 33060/tcp |
+| FlashCard-nginx | /docker-entrypoint.sh ngin ... | UP | 0.0.0.0:8001->443/tcp,:::8001->443/tcp, 0.0.0.0:8000->80/tcp,:::8000->80/tcp |
+| FlashCard-php | docker-php-entrypoint php-fpm | UP | 9000/tcp |
+| FlashCard-redis | docker-entrypoint.sh redis ... | UP | 0.0.0.0:6380->6379/tcp,:::6380->6379/tcp |
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Setup Laravel Configuration
+You should run these commands sequencially:
 
-## Code of Conduct
+```bash
+docker exec -it FlashCard-php composer install
+```
+> Installing composer packages may take a while to be executed.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+docker exec -it FlashCard-php php artisan key:generate
+```
+```bash
+docker exec -it FlashCard-php php artisan migrate
+```
 
-## Security Vulnerabilities
+And that's it. Let's enjoy :)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Artisan Commands
+Your commands must be executed in running containers. Therefore, you can execute artisan commands like this: 
 
-## License
+```bash
+docker exec -it FlashCard-php php artisan flashcard:interactive
+``` 
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Running Tests
+To run the tests run:
+```bash
+docker exec -it FlashCard-php php artisan test
+```
