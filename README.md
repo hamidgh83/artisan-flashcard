@@ -78,7 +78,7 @@ The following commands are available:
 | flashcard:stats | --user[=username], -i | Shows an stat of practiced flashcards |
 | flashcard:reset | --user[=username], -i | Clears all the practices by the user |
 
-> Please note that you can jump into an interactive console command using `-i` option. The fist command `flashcard:interactive` only accepts `--user` option.  
+> Please note that you can jump into an interactive console command using `-i` option. The first command `flashcard:interactive` only accepts `--user` option.  
 
 ## Running Tests
 To run the tests run:
