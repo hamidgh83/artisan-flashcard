@@ -13,6 +13,9 @@ The application has been set up with docker and you need to install:
 
 on your machine to run the project.
 
+## Dependencies
+This project uses `PHP Coding Standards Fixer` to follow coding Standards and `PHP Static Analysis Tool` (PHPStan) to find errors during the development. 
+
 ## How to Run
 ### Running Docker Containers
 In order to run the application you have to build the docker images and run the containers. Before building the docker images, make sure that you have copied the environment file and updated the parameters.
